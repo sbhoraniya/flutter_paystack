@@ -7,13 +7,19 @@ import 'package:flutter_paystack/src/widgets/common/input_formatters.dart';
 import 'package:flutter_paystack/src/widgets/input/base_field.dart';
 
 class NumberField extends BaseTextField {
-  NumberField(
-      {Key? key,
-      required PaymentCard? card,
-      required TextEditingController? controller,
-      required FormFieldSetter<String> onSaved,
-      required Widget suffix})
-      : super(
+  PaymentCard? card;
+  bool isDarkMode;
+  Color? darkModeTextColor;
+
+  NumberField({
+    Key? key,
+    required this.card,
+    required TextEditingController? controller,
+    required FormFieldSetter<String> onSaved,
+    required Widget suffix,
+    this.isDarkMode = false,
+    this.darkModeTextColor,
+  }) : super(
           key: key,
           labelText: 'CARD NUMBER',
           hintText: '0000 0000 0000 0000',
@@ -23,8 +29,8 @@ class NumberField extends BaseTextField {
           validator: (String? value) => validateCardNum(value, card),
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
-            new LengthLimitingTextInputFormatter(19),
-            new CardNumberInputFormatter()
+            LengthLimitingTextInputFormatter(19),
+            CardNumberInputFormatter(),
           ],
         );
 
@@ -36,5 +42,30 @@ class NumberField extends BaseTextField {
     input = CardUtils.getCleanedNumber(input);
 
     return card!.validNumber(input) ? null : Strings.invalidNumber;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        hintText: hintText,
+        hintStyle: TextStyle(color: theme.hintColor),
+        labelStyle: TextStyle(color: theme.colorScheme.onSurface),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: theme.colorScheme.secondary),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: theme.colorScheme.secondary),
+        ),
+        suffixIcon: suffix,
+      ),
+      style: TextStyle(color: isDarkMode? darkModeTextColor:theme.colorScheme.onSurface),
+      validator: (value) => validateCardNum(value, card),
+      inputFormatters: inputFormatters,
+      onSaved: onSaved,
+    );
   }
 }

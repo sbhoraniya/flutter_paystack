@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutter_paystack/src/models/checkout_response.dart';
 
 abstract class BaseState<T extends StatefulWidget> extends State<T> {
@@ -26,21 +27,25 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
     }
 
     var returnValue = getPopReturnValue();
-    if (alwaysPop ||
-        (returnValue != null &&
-            (returnValue is CheckoutResponse && returnValue.status == true))) {
+    if (alwaysPop || (returnValue != null && (returnValue is CheckoutResponse && returnValue.status == true))) {
       Navigator.of(context).pop(returnValue);
       return false;
     }
 
-    var text = new Text(confirmationMessage);
+    var text = new Text(
+      confirmationMessage,
+      style: TextStyle(color: mIsDarkMode ? mDarkModeTextColor : null),
+    );
 
     var dialog = Platform.isIOS
         ? new CupertinoAlertDialog(
             content: text,
             actions: <Widget>[
               new CupertinoDialogAction(
-                child: const Text('Yes'),
+                child: Text(
+                  'Yes',
+                  style: TextStyle(color: mIsDarkMode ? Theme.of(context).colorScheme.secondary : null),
+                ),
                 isDestructiveAction: true,
                 onPressed: () {
                   Navigator.pop(context, true); // Returning true to
@@ -48,11 +53,13 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
                 },
               ),
               new CupertinoDialogAction(
-                child: const Text('No'),
+                child: Text(
+                  'No',
+                  style: TextStyle(color: mIsDarkMode ? Theme.of(context).colorScheme.secondary : null),
+                ),
                 isDefaultAction: true,
                 onPressed: () {
-                  Navigator.pop(context,
-                      false); // Pops the confirmation dialog but not the page.
+                  Navigator.pop(context, false); // Pops the confirmation dialog but not the page.
                 },
               ),
             ],
@@ -61,16 +68,20 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
             content: text,
             actions: <Widget>[
               new TextButton(
-                  child: const Text('NO'),
+                  child: Text(
+                    'NO',
+                    style: TextStyle(color: mIsDarkMode ? Theme.of(context).colorScheme.secondary : null),
+                  ),
                   onPressed: () {
-                    Navigator.of(context).pop(
-                        false); // Pops the confirmation dialog but not the page.
+                    Navigator.of(context).pop(false); // Pops the confirmation dialog but not the page.
                   }),
               new TextButton(
-                  child: const Text('YES'),
+                  child: Text(
+                    'YES',
+                    style: TextStyle(color: mIsDarkMode ? Theme.of(context).colorScheme.secondary : null),
+                  ),
                   onPressed: () {
-                    Navigator.of(context).pop(
-                        true); // Returning true to _onWillPop will pop again.
+                    Navigator.of(context).pop(true); // Returning true to _onWillPop will pop again.
                   })
             ],
           );

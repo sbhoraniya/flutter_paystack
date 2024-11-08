@@ -20,6 +20,8 @@ class CardCheckout extends StatefulWidget {
   final bool hideAmount;
   final CardServiceContract service;
   final String publicKey;
+  final bool isDarkMode;
+  final Color? darkModeTextColor;
 
   CardCheckout({
     Key? key,
@@ -30,6 +32,8 @@ class CardCheckout extends StatefulWidget {
     required this.service,
     required this.publicKey,
     this.hideAmount = false,
+    this.darkModeTextColor,
+    this.isDarkMode = false,
   }) : super(key: key);
 
   @override
@@ -39,13 +43,11 @@ class CardCheckout extends StatefulWidget {
 class _CardCheckoutState extends BaseCheckoutMethodState<CardCheckout> {
   final Charge _charge;
 
-  _CardCheckoutState(this._charge, OnResponse<CheckoutResponse> onResponse)
-      : super(onResponse, CheckoutMethod.card);
+  _CardCheckoutState(this._charge, OnResponse<CheckoutResponse> onResponse) : super(onResponse, CheckoutMethod.card);
 
   @override
   Widget buildAnimatedChild() {
-    var amountText =
-        _charge.amount.isNegative ? '' : Utils.formatAmount(_charge.amount);
+    var amountText = _charge.amount.isNegative ? '' : Utils.formatAmount(_charge.amount);
 
     return new Container(
       alignment: Alignment.center,
@@ -54,7 +56,7 @@ class _CardCheckoutState extends BaseCheckoutMethodState<CardCheckout> {
           new Text(
             Strings.cardInputInstruction,
             key: Key("InstructionKey"),
-            style: const TextStyle(fontWeight: FontWeight.w500),
+            style: TextStyle(fontWeight: FontWeight.w500, color: widget.isDarkMode ? widget.darkModeTextColor : null),
           ),
           new SizedBox(
             height: 20.0,
@@ -64,6 +66,8 @@ class _CardCheckoutState extends BaseCheckoutMethodState<CardCheckout> {
             buttonText: widget.hideAmount ? "Continue" : 'Pay $amountText',
             card: _charge.card,
             onValidated: _onCardValidated,
+            isDarkMode: widget.isDarkMode,
+            darkModeTextColor: widget.darkModeTextColor,
           ),
         ],
       ),
@@ -76,8 +80,7 @@ class _CardCheckoutState extends BaseCheckoutMethodState<CardCheckout> {
     widget.onCardChange(_charge.card);
     widget.onProcessingChange(true);
 
-    if ((_charge.accessCode != null && _charge.accessCode!.isNotEmpty) ||
-        _charge.reference != null && _charge.reference!.isNotEmpty) {
+    if ((_charge.accessCode != null && _charge.accessCode!.isNotEmpty) || _charge.reference != null && _charge.reference!.isNotEmpty) {
       _chargeCard(_charge);
     } else {
       // This should never happen. Validation has already been done in [PaystackPlugin .checkout]

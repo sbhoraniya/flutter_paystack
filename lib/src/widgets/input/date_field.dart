@@ -7,10 +7,15 @@ import 'package:flutter_paystack/src/widgets/common/input_formatters.dart';
 import 'package:flutter_paystack/src/widgets/input/base_field.dart';
 
 class DateField extends BaseTextField {
+  bool isDarkMode;
+  Color? darkModeTextColor;
+
   DateField({
     Key? key,
     required PaymentCard? card,
     required FormFieldSetter<String> onSaved,
+    this.isDarkMode = false,
+    this.darkModeTextColor,
   }) : super(
           key: key,
           labelText: 'CARD EXPIRY',
@@ -20,8 +25,8 @@ class DateField extends BaseTextField {
           onSaved: onSaved,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
-            new LengthLimitingTextInputFormatter(4),
-            new CardMonthInputFormatter()
+            LengthLimitingTextInputFormatter(4),
+            CardMonthInputFormatter(),
           ],
         );
 
@@ -29,10 +34,7 @@ class DateField extends BaseTextField {
     if (card == null) {
       return null;
     }
-    if (card.expiryYear == null ||
-        card.expiryMonth == null ||
-        card.expiryYear == 0 ||
-        card.expiryMonth == 0) {
+    if (card.expiryYear == null || card.expiryMonth == null || card.expiryYear == 0 || card.expiryMonth == 0) {
       return null;
     } else {
       return '${card.expiryMonth}/${card.expiryYear}';
@@ -46,21 +48,43 @@ class DateField extends BaseTextField {
 
     int year;
     int month;
-    // The value contains a forward slash if the month and year has been
-    // entered.
-    if (value.contains(new RegExp(r'(/)'))) {
+
+    if (value.contains(RegExp(r'(/)'))) {
       final date = CardUtils.getExpiryDate(value);
       month = date[0];
       year = date[1];
     } else {
-      // Only the month was entered
       month = int.parse(value.substring(0, (value.length)));
-      year = -1; // Lets use an invalid year intentionally
+      year = -1;
     }
 
     if (!CardUtils.isNotExpired(year, month)) {
       return Strings.invalidExpiry;
     }
     return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextFormField(
+      initialValue: initialValue,
+      decoration: InputDecoration(
+        labelText: labelText,
+        hintText: hintText,
+        hintStyle: TextStyle(color: theme.hintColor),
+        labelStyle: TextStyle(color: theme.colorScheme.onSurface),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: theme.colorScheme.secondary),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: theme.colorScheme.secondary),
+        ),
+      ),
+      style: TextStyle(color: isDarkMode ? darkModeTextColor : theme.colorScheme.onSurface),
+      validator: validator,
+      inputFormatters: inputFormatters,
+      onSaved: onSaved,
+    );
   }
 }

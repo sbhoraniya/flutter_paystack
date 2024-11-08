@@ -11,12 +11,15 @@ class CardInput extends StatefulWidget {
   final String buttonText;
   final PaymentCard? card;
   final ValueChanged<PaymentCard?> onValidated;
-
+  bool isDarkMode;
+  Color? darkModeTextColor;
   CardInput({
     Key? key,
     required this.buttonText,
     required this.card,
     required this.onValidated,
+    this.isDarkMode = false,
+    this.darkModeTextColor,
   }) : super(key: key);
 
   @override
@@ -63,6 +66,8 @@ class _CardInputState extends State<CardInput> {
             onSaved: (String? value) =>
                 _card!.number = CardUtils.getCleanedNumber(value),
             suffix: getCardIcon(),
+            isDarkMode: widget.isDarkMode,
+            darkModeTextColor: widget.darkModeTextColor,
           ),
           new SizedBox(
             height: 15.0,
@@ -75,6 +80,8 @@ class _CardInputState extends State<CardInput> {
                 child: new DateField(
                   key: ValueKey("ExpiryKey"),
                   card: _card,
+                  isDarkMode: widget.isDarkMode,
+                  darkModeTextColor: widget.darkModeTextColor,
                   onSaved: (value) {
                     List<int> expiryDate = CardUtils.getExpiryDate(value);
                     _card!.expiryMonth = expiryDate[0];

@@ -27,6 +27,8 @@ class CheckoutWidget extends StatefulWidget {
   final BankServiceContract bankService;
   final CardServiceContract cardsService;
   final String publicKey;
+  final bool isDarkMode;
+  final Color? darkModeTextColor;
 
   CheckoutWidget({
     required this.method,
@@ -38,6 +40,8 @@ class CheckoutWidget extends StatefulWidget {
     this.logo,
     this.hideEmail = false,
     this.hideAmount = false,
+    this.darkModeTextColor,
+    this.isDarkMode = false,
   });
 
   @override
@@ -104,7 +108,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
               child: Text(
                 "Secured by",
                 key: Key("SecuredBy"),
-                style: TextStyle(fontSize: 10),
+                style: TextStyle(fontSize: 10, color: widget.isDarkMode? widget.darkModeTextColor:null),
               ),
             )
           ],
@@ -177,7 +181,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-                color: context.textTheme().bodySmall?.color, fontSize: 12.0),
+                color: widget.isDarkMode ? widget.darkModeTextColor : context.textTheme().bodySmall?.color, fontSize: 12.0),
           ),
         if (!widget.hideAmount && !_charge.amount.isNegative)
           Row(
@@ -189,7 +193,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
                 'Pay',
                 style: TextStyle(
                     fontSize: 14.0,
-                    color: context.textTheme().displayLarge?.color),
+                    color: widget.isDarkMode? widget.darkModeTextColor:context.textTheme().displayLarge?.color),
               ),
               SizedBox(
                 width: 5.0,
@@ -198,7 +202,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
                   child: Text(Utils.formatAmount(_charge.amount),
                       style: TextStyle(
                           fontSize: 15.0,
-                          color: context.textTheme().titleLarge?.color,
+                          color:widget.isDarkMode? widget.darkModeTextColor: context.textTheme().titleLarge?.color,
                           fontWeight: FontWeight.bold)))
             ],
           )
@@ -304,6 +308,8 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
             onProcessingChange: _onProcessingChange,
             onResponse: _onPaymentResponse,
             hideAmount: widget.hideAmount,
+            darkModeTextColor: widget.darkModeTextColor,
+            isDarkMode: widget.isDarkMode,
             onCardChange: (PaymentCard? card) {
               if (card == null) return;
               _charge.card!.number = card.number;

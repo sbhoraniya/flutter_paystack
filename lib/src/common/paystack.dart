@@ -15,10 +15,13 @@ import 'package:flutter_paystack/src/models/checkout_response.dart';
 import 'package:flutter_paystack/src/transaction/card_transaction_manager.dart';
 import 'package:flutter_paystack/src/widgets/checkout/checkout_widget.dart';
 
+bool mIsDarkMode = false;
+Color mDarkModeTextColor = Colors.white;
 class PaystackPlugin {
   bool _sdkInitialized = false;
   String _publicKey = "";
   static late PlatformInfo platformInfo;
+
 
   /// Initialize the Paystack object. It should be called as early as possible
   /// (preferably in initState() of the Widget.
@@ -77,8 +80,7 @@ class PaystackPlugin {
   ///
   /// [charge] - the charge object.
 
-  Future<CheckoutResponse> chargeCard(BuildContext context,
-      {required Charge charge}) {
+  Future<CheckoutResponse> chargeCard(BuildContext context, {required Charge charge}) {
     _performChecks();
 
     return _Paystack(publicKey).chargeCard(context: context, charge: charge);
@@ -126,6 +128,8 @@ class PaystackPlugin {
     Widget? logo,
     bool hideEmail = false,
     bool hideAmount = false,
+    bool isDarkMode = false,
+    Color? darkModeTextColor,
   }) async {
     return _Paystack(publicKey).checkout(
       context,
@@ -135,13 +139,14 @@ class PaystackPlugin {
       logo: logo,
       hideAmount: hideAmount,
       hideEmail: hideEmail,
+      darkModeTextColor: darkModeTextColor,
+      isDarkMode: isDarkMode,
     );
   }
 
   _validateSdkInitialized() {
     if (!sdkInitialized) {
-      throw new PaystackSdkNotInitializedException(
-          'Paystack SDK has not been initialized. The SDK has'
+      throw new PaystackSdkNotInitializedException('Paystack SDK has not been initialized. The SDK has'
           ' to be initialized before use');
     }
   }
@@ -152,14 +157,8 @@ class _Paystack {
 
   _Paystack(this.publicKey);
 
-  Future<CheckoutResponse> chargeCard(
-      {required BuildContext context, required Charge charge}) {
-    return new CardTransactionManager(
-            service: CardService(),
-            charge: charge,
-            context: context,
-            publicKey: publicKey)
-        .chargeCard();
+  Future<CheckoutResponse> chargeCard({required BuildContext context, required Charge charge}) {
+    return new CardTransactionManager(service: CardService(), charge: charge, context: context, publicKey: publicKey).chargeCard();
   }
 
   Future<CheckoutResponse> checkout(
@@ -170,8 +169,12 @@ class _Paystack {
     bool hideEmail = false,
     bool hideAmount = false,
     Widget? logo,
+    bool isDarkMode = false,
+    Color? darkModeTextColor,
   }) async {
     assert(() {
+      mIsDarkMode = isDarkMode;
+      mDarkModeTextColor = darkModeTextColor ?? Colors.white;
       _validateChargeAndKey(charge);
       switch (method) {
         case CheckoutMethod.card:
@@ -202,6 +205,8 @@ class _Paystack {
         logo: logo,
         hideAmount: hideAmount,
         hideEmail: hideEmail,
+        darkModeTextColor: darkModeTextColor,
+        isDarkMode: isDarkMode,
       ),
     );
     return response == null ? CheckoutResponse.defaults() : response;
@@ -218,7 +223,6 @@ class _Paystack {
 }
 
 typedef void OnTransactionChange<Transaction>(Transaction transaction);
-typedef void OnTransactionError<Object, Transaction>(
-    Object e, Transaction transaction);
+typedef void OnTransactionError<Object, Transaction>(Object e, Transaction transaction);
 
 enum CheckoutMethod { card, bank, selectable }
