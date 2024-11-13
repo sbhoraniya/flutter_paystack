@@ -172,9 +172,9 @@ class _Paystack {
     bool isDarkMode = false,
     Color? darkModeTextColor,
   }) async {
+     mIsDarkMode = isDarkMode;
+     mDarkModeTextColor = darkModeTextColor ?? Colors.white;
     assert(() {
-      mIsDarkMode = isDarkMode;
-      mDarkModeTextColor = darkModeTextColor ?? Colors.white;
       _validateChargeAndKey(charge);
       switch (method) {
         case CheckoutMethod.card:
