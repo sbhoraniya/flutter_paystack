@@ -126,6 +126,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
                   key: Key("PaystackBottomIcon"),
                   package: 'flutter_paystack',
                   height: 16,
+                  color: mIsDarkMode?mDarkModeTextColor:null,
                 ),
               ),
             Image.asset(
@@ -133,6 +134,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
               key: Key("PaystackLogo"),
               package: 'flutter_paystack',
               height: 15,
+              color: mIsDarkMode?mDarkModeTextColor:null,
             )
           ],
         )

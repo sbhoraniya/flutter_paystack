@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutter_paystack/src/widgets/common/extensions.dart';
 
 class PinField extends StatefulWidget {
@@ -24,6 +25,7 @@ class _PinFieldState extends State<PinField> {
           fontWeight: FontWeight.bold,
           fontSize: 25.0,
           letterSpacing: 15.0,
+          color: mIsDarkMode ? mDarkModeTextColor : null,
         ),
         autofocus: true,
         inputFormatters: [
@@ -41,11 +43,8 @@ class _PinFieldState extends State<PinField> {
             letterSpacing: 0,
           ),
           contentPadding: const EdgeInsets.all(10.0),
-          enabledBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.grey, width: 0.5)),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: context.colorScheme().secondary, width: 1.0)),
+          enabledBorder: const OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey, width: 0.5)),
+          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: context.colorScheme().secondary, width: 1.0)),
         ),
         onChanged: (String value) {
           if (value.length == widget.pinLength) {

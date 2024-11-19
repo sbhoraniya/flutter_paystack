@@ -33,8 +33,7 @@ class ErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Remove 'Retry buttons for bank payment because when you retry a transaction it ret
-    var buttonMargin =
-        isCardPayment ? new SizedBox(height: 5.0) : emptyContainer;
+    var buttonMargin = isCardPayment ? new SizedBox(height: 5.0) : emptyContainer;
     return new Container(
       child: new CustomAnimatedWidget(
         controller: controller,
@@ -50,23 +49,19 @@ class ErrorWidget extends StatelessWidget {
             new Text(
               text!,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style:  TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 14.0,
+                color: mIsDarkMode ? mDarkModeTextColor : null,
               ),
             ),
             new SizedBox(height: 25.0),
-            isCardPayment
-                ? new WhiteButton(
-                    onPressed: tryAnotherCard, text: 'Try another card')
-                : emptyContainer,
+            isCardPayment ? new WhiteButton(onPressed: tryAnotherCard, text: 'Try another card') : emptyContainer,
             buttonMargin,
             method == CheckoutMethod.selectable || method == CheckoutMethod.bank
                 ? new WhiteButton(
                     onPressed: payWithBank,
-                    text: method == CheckoutMethod.bank || !isCardPayment
-                        ? 'Retry'
-                        : 'Try paying with your bank account',
+                    text: method == CheckoutMethod.bank || !isCardPayment ? 'Retry' : 'Try paying with your bank account',
                   )
                 : emptyContainer,
             buttonMargin,

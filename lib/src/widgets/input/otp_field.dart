@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 
 class OtpField extends TextFormField {
   OtpField({FormFieldSetter<String>? onSaved, required Color borderColor})
@@ -9,6 +10,7 @@ class OtpField extends TextFormField {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 25.0,
+            color: mIsDarkMode?mDarkModeTextColor:null,
           ),
           autofocus: true,
           maxLines: 1,
