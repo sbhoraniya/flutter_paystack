@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutter_paystack/src/models/card.dart';
 import 'package:flutter_paystack/src/widgets/base_widget.dart';
 import 'package:flutter_paystack/src/widgets/buttons.dart';
@@ -35,7 +36,7 @@ class _CardInputWidgetState extends BaseState<CardInputWidget> {
               new Text(
                 'Please, provide valid card details.',
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.w500),
+                style: TextStyle(fontWeight: FontWeight.w500,color:mIsDarkMode?mDarkModeTextColor: null),
               ),
               new SizedBox(
                 height: 35.0,

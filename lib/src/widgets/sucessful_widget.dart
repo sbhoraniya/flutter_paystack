@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutter_paystack/src/common/utils.dart';
 import 'package:flutter_paystack/src/widgets/animated_widget.dart';
 import 'package:flutter_paystack/src/widgets/common/extensions.dart';
@@ -86,9 +87,10 @@ class _SuccessfulWidgetState extends State<SuccessfulWidget>
             Text(
               'Payment Successful',
               style: TextStyle(
-                color: context.textTheme().titleLarge?.color,
+                color: mIsDarkMode?mDarkModeTextColor: context.textTheme().titleLarge?.color,
                 fontWeight: FontWeight.w500,
                 fontSize: 16.0,
+
               ),
             ),
             new SizedBox(
@@ -98,7 +100,7 @@ class _SuccessfulWidgetState extends State<SuccessfulWidget>
                 ? new Container()
                 : new Text('You paid ${Utils.formatAmount(widget.amount)}',
                     style: TextStyle(
-                      color: context.textTheme().titleLarge?.color,
+                      color:mIsDarkMode?mDarkModeTextColor: context.textTheme().titleLarge?.color,
                       fontWeight: FontWeight.normal,
                       fontSize: 14.0,
                     )),
