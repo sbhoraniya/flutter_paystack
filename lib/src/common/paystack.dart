@@ -17,11 +17,11 @@ import 'package:flutter_paystack/src/widgets/checkout/checkout_widget.dart';
 
 bool mIsDarkMode = false;
 Color mDarkModeTextColor = Colors.white;
+
 class PaystackPlugin {
   bool _sdkInitialized = false;
   String _publicKey = "";
   static late PlatformInfo platformInfo;
-
 
   /// Initialize the Paystack object. It should be called as early as possible
   /// (preferably in initState() of the Widget.
@@ -172,8 +172,8 @@ class _Paystack {
     bool isDarkMode = false,
     Color? darkModeTextColor,
   }) async {
-     mIsDarkMode = isDarkMode;
-     mDarkModeTextColor = darkModeTextColor ?? Colors.white;
+    mIsDarkMode = isDarkMode;
+    mDarkModeTextColor = darkModeTextColor ?? Colors.white;
     assert(() {
       _validateChargeAndKey(charge);
       switch (method) {
@@ -195,18 +195,29 @@ class _Paystack {
     CheckoutResponse? response = await showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (BuildContext context) => new CheckoutWidget(
-        publicKey: publicKey,
-        bankService: BankService(),
-        cardsService: CardService(),
-        method: method,
-        charge: charge,
-        fullscreen: fullscreen,
-        logo: logo,
-        hideAmount: hideAmount,
-        hideEmail: hideEmail,
-        darkModeTextColor: darkModeTextColor,
-        isDarkMode: isDarkMode,
+      builder: (BuildContext context) => Theme(
+        data: Theme.of(context).copyWith(
+          primaryColor: Theme.of(context).colorScheme.secondary,
+          colorScheme: Theme.of(context).colorScheme.copyWith(
+                primary: Theme.of(context).colorScheme.secondary,
+              ),
+          textTheme: Theme.of(context).textTheme.apply(
+                bodyColor: mIsDarkMode ? mDarkModeTextColor : Theme.of(context).colorScheme.onSurface,
+                displayColor: mIsDarkMode ? mDarkModeTextColor : Theme.of(context).colorScheme.onSurface,
+              ),
+        ),
+        child: new CheckoutWidget(
+          publicKey: publicKey,
+          bankService: BankService(),
+          cardsService: CardService(),
+          method: method,
+          charge: charge,
+          fullscreen: fullscreen,
+          isDarkMode: mIsDarkMode,
+          logo: logo,
+          hideAmount: hideAmount,
+          hideEmail: hideEmail,
+        ),
       ),
     );
     return response == null ? CheckoutResponse.defaults() : response;

@@ -5,8 +5,8 @@ import 'package:flutter_paystack/src/models/card.dart';
 import 'package:flutter_paystack/src/widgets/input/base_field.dart';
 
 class CVCField extends BaseTextField {
-  bool isDarkMode;
-  Color? darkModeTextColor;
+  final bool isDarkMode;
+  final Color? darkModeTextColor;
 
   CVCField({
     Key? key,
@@ -20,7 +20,8 @@ class CVCField extends BaseTextField {
           hintText: '123',
           onSaved: onSaved,
           validator: (String? value) => validateCVC(value, card),
-          initialValue: card != null && card.cvc != null ? card.cvc.toString() : null,
+          initialValue:
+              card != null && card.cvc != null ? card.cvc.toString() : null,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
             LengthLimitingTextInputFormatter(4),
@@ -35,24 +36,35 @@ class CVCField extends BaseTextField {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return TextFormField(
-      initialValue: initialValue,
-      decoration: InputDecoration(
-        labelText: labelText,
-        hintText: hintText,
-        hintStyle: TextStyle(color: theme.hintColor),
-        labelStyle: TextStyle(color: theme.colorScheme.onSurface),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.secondary),
+    return Material(
+      borderRadius: BorderRadius.circular(4),
+      child: TextFormField(
+        initialValue: initialValue,
+        decoration: InputDecoration(
+          labelText: labelText,
+          hintText: hintText,
+          filled: true,
+          fillColor: isDarkMode ? Colors.black : Colors.white,
+          hintStyle: TextStyle(
+            color: isDarkMode ? Colors.white60 : theme.hintColor,
+          ),
+          labelStyle: TextStyle(
+            color: isDarkMode ? Colors.white60 : theme.colorScheme.onSurface,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: theme.colorScheme.secondary),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: theme.colorScheme.secondary),
+          ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.secondary),
-        ),
+        style: TextStyle(
+            color:
+                isDarkMode ? darkModeTextColor : theme.colorScheme.onSurface),
+        validator: validator,
+        inputFormatters: inputFormatters,
+        onSaved: onSaved,
       ),
-      style: TextStyle(color: isDarkMode ? darkModeTextColor : theme.colorScheme.onSurface),
-      validator: validator,
-      inputFormatters: inputFormatters,
-      onSaved: onSaved,
     );
   }
 }

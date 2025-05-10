@@ -7,9 +7,9 @@ import 'package:flutter_paystack/src/widgets/common/input_formatters.dart';
 import 'package:flutter_paystack/src/widgets/input/base_field.dart';
 
 class NumberField extends BaseTextField {
-  PaymentCard? card;
-  bool isDarkMode;
-  Color? darkModeTextColor;
+  final PaymentCard? card;
+  final bool isDarkMode;
+  final Color? darkModeTextColor;
 
   NumberField({
     Key? key,
@@ -47,25 +47,40 @@ class NumberField extends BaseTextField {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: labelText,
-        hintText: hintText,
-        hintStyle: TextStyle(color: theme.hintColor),
-        labelStyle: TextStyle(color: theme.colorScheme.onSurface),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.secondary),
+    return Material(
+      borderRadius: BorderRadius.circular(4),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: labelText,
+          hintText: hintText,
+          filled: true,
+          fillColor: isDarkMode ? Colors.black : Colors.white,
+          hintStyle: TextStyle(
+            color: isDarkMode ? Colors.white60 : theme.hintColor,
+          ),
+          labelStyle: TextStyle(
+            color: isDarkMode ? Colors.white60 : theme.colorScheme.onSurface,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: theme.colorScheme.secondary),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: theme.colorScheme.secondary),
+          ),
+          suffixIcon: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(8), child: suffix),
+          ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.secondary),
-        ),
-        suffixIcon: suffix,
+        style: TextStyle(
+            color:
+                isDarkMode ? darkModeTextColor : theme.colorScheme.onSurface),
+        validator: (value) => validateCardNum(value, card),
+        inputFormatters: inputFormatters,
+        onSaved: onSaved,
       ),
-      style: TextStyle(color: isDarkMode? darkModeTextColor:theme.colorScheme.onSurface),
-      validator: (value) => validateCardNum(value, card),
-      inputFormatters: inputFormatters,
-      onSaved: onSaved,
     );
   }
 }

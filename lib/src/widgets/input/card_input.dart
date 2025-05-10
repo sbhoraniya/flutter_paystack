@@ -11,8 +11,8 @@ class CardInput extends StatefulWidget {
   final String buttonText;
   final PaymentCard? card;
   final ValueChanged<PaymentCard?> onValidated;
-  bool isDarkMode;
-  Color? darkModeTextColor;
+  final bool isDarkMode;
+  final Color? darkModeTextColor;
   CardInput({
     Key? key,
     required this.buttonText,
@@ -94,6 +94,8 @@ class _CardInputState extends State<CardInput> {
                   child: new CVCField(
                 key: Key("CVVKey"),
                 card: _card,
+                isDarkMode: widget.isDarkMode,
+                darkModeTextColor: widget.darkModeTextColor,
                 onSaved: (value) {
                   _card!.cvc = CardUtils.getCleanedNumber(value);
                 },

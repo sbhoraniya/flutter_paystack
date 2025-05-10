@@ -7,8 +7,8 @@ import 'package:flutter_paystack/src/widgets/common/input_formatters.dart';
 import 'package:flutter_paystack/src/widgets/input/base_field.dart';
 
 class DateField extends BaseTextField {
-  bool isDarkMode;
-  Color? darkModeTextColor;
+  final bool isDarkMode;
+  final Color? darkModeTextColor;
 
   DateField({
     Key? key,
@@ -34,7 +34,10 @@ class DateField extends BaseTextField {
     if (card == null) {
       return null;
     }
-    if (card.expiryYear == null || card.expiryMonth == null || card.expiryYear == 0 || card.expiryMonth == 0) {
+    if (card.expiryYear == null ||
+        card.expiryMonth == null ||
+        card.expiryYear == 0 ||
+        card.expiryMonth == 0) {
       return null;
     } else {
       return '${card.expiryMonth}/${card.expiryYear}';
@@ -67,24 +70,35 @@ class DateField extends BaseTextField {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return TextFormField(
-      initialValue: initialValue,
-      decoration: InputDecoration(
-        labelText: labelText,
-        hintText: hintText,
-        hintStyle: TextStyle(color: theme.hintColor),
-        labelStyle: TextStyle(color: theme.colorScheme.onSurface),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.secondary),
+    return Material(
+      borderRadius: BorderRadius.circular(4),
+      child: TextFormField(
+        initialValue: initialValue,
+        decoration: InputDecoration(
+          labelText: labelText,
+          hintText: hintText,
+          filled: true,
+          fillColor: isDarkMode ? Colors.black : Colors.white,
+          hintStyle: TextStyle(
+            color: isDarkMode ? Colors.white60 : theme.hintColor,
+          ),
+          labelStyle: TextStyle(
+            color: isDarkMode ? Colors.white60 : theme.colorScheme.onSurface,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: theme.colorScheme.secondary),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: theme.colorScheme.secondary),
+          ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.secondary),
-        ),
+        style: TextStyle(
+            color:
+                isDarkMode ? darkModeTextColor : theme.colorScheme.onSurface),
+        validator: validator,
+        inputFormatters: inputFormatters,
+        onSaved: onSaved,
       ),
-      style: TextStyle(color: isDarkMode ? darkModeTextColor : theme.colorScheme.onSurface),
-      validator: validator,
-      inputFormatters: inputFormatters,
-      onSaved: onSaved,
     );
   }
 }

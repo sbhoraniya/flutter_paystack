@@ -48,8 +48,7 @@ class CheckoutWidget extends StatefulWidget {
   _CheckoutWidgetState createState() => _CheckoutWidgetState(charge);
 }
 
-class _CheckoutWidgetState extends BaseState<CheckoutWidget>
-    with TickerProviderStateMixin {
+class _CheckoutWidgetState extends BaseState<CheckoutWidget> with TickerProviderStateMixin {
   static const tabBorderRadius = BorderRadius.all(Radius.circular(4.0));
   final Charge _charge;
   int? _currentIndex = 0;
@@ -71,10 +70,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
     _initPaymentMethods();
     _currentIndex = _getCurrentTab();
     _showTabs = widget.method == CheckoutMethod.selectable ? true : false;
-    _tabController = new TabController(
-        vsync: this,
-        length: _methodWidgets.length,
-        initialIndex: _currentIndex!);
+    _tabController = new TabController(vsync: this, length: _methodWidgets.length, initialIndex: _currentIndex!);
     _tabController!.addListener(_indexChange);
     _animationController = new AnimationController(
       duration: const Duration(milliseconds: 500),
@@ -108,7 +104,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
               child: Text(
                 "Secured by",
                 key: Key("SecuredBy"),
-                style: TextStyle(fontSize: 10, color: widget.isDarkMode? widget.darkModeTextColor:null),
+                style: TextStyle(fontSize: 10, color: widget.isDarkMode ? widget.darkModeTextColor : null),
               ),
             )
           ],
@@ -126,7 +122,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
                   key: Key("PaystackBottomIcon"),
                   package: 'flutter_paystack',
                   height: 16,
-                  color: mIsDarkMode?mDarkModeTextColor:null,
+                  color: mIsDarkMode ? mDarkModeTextColor : null,
                 ),
               ),
             Image.asset(
@@ -134,7 +130,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
               key: Key("PaystackLogo"),
               package: 'flutter_paystack',
               height: 15,
-              color: mIsDarkMode?mDarkModeTextColor:null,
+              color: mIsDarkMode ? mDarkModeTextColor : null,
             )
           ],
         )
@@ -152,8 +148,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
             onTap: () => FocusScope.of(context).unfocus(),
             behavior: HitTestBehavior.translucent,
             child: new Container(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
                 child: Column(
                   children: <Widget>[
                     _showProcessingError()
@@ -182,8 +177,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
             key: Key("ChargeEmail"),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-                color: widget.isDarkMode ? widget.darkModeTextColor : context.textTheme().bodySmall?.color, fontSize: 12.0),
+            style: TextStyle(color: widget.isDarkMode ? widget.darkModeTextColor : context.textTheme().bodySmall?.color, fontSize: 12.0),
           ),
         if (!widget.hideAmount && !_charge.amount.isNegative)
           Row(
@@ -193,19 +187,12 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
             children: <Widget>[
               Text(
                 'Pay',
-                style: TextStyle(
-                    fontSize: 14.0,
-                    color: widget.isDarkMode? widget.darkModeTextColor:context.textTheme().displayLarge?.color),
+                style: TextStyle(fontSize: 14.0, color: widget.isDarkMode ? widget.darkModeTextColor : context.textTheme().displayLarge?.color),
               ),
               SizedBox(
                 width: 5.0,
               ),
-              Flexible(
-                  child: Text(Utils.formatAmount(_charge.amount),
-                      style: TextStyle(
-                          fontSize: 15.0,
-                          color:widget.isDarkMode? widget.darkModeTextColor: context.textTheme().titleLarge?.color,
-                          fontWeight: FontWeight.bold)))
+              Flexible(child: Text(Utils.formatAmount(_charge.amount), style: TextStyle(fontSize: 15.0, color: widget.isDarkMode ? widget.darkModeTextColor : context.textTheme().titleLarge?.color, fontWeight: FontWeight.bold)))
             ],
           )
       ],
@@ -257,8 +244,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
           isScrollable: true,
           unselectedLabelColor: context.colorScheme().onBackground,
           labelColor: accentColor,
-          labelStyle:
-              new TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
+          labelStyle: new TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),
           indicator: new ShapeDecoration(
             shape: RoundedRectangleBorder(
                   borderRadius: tabBorderRadius,
@@ -336,9 +322,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
 
   void _onProcessingChange(bool processing) {
     setState(() {
-      _tabHeight = processing || _paymentSuccessful || _showProcessingError()
-          ? 0.0
-          : kFullTabHeight;
+      _tabHeight = processing || _paymentSuccessful || _showProcessingError() ? 0.0 : kFullTabHeight;
       processing = processing;
     });
   }
@@ -443,9 +427,7 @@ class _CheckoutWidgetState extends BaseState<CheckoutWidget>
     CheckoutResponse? response = _response;
     if (response == null) {
       response = CheckoutResponse.defaults();
-      response.method = _tabController!.index == 0
-          ? CheckoutMethod.card
-          : CheckoutMethod.bank;
+      response.method = _tabController!.index == 0 ? CheckoutMethod.card : CheckoutMethod.bank;
     }
     if (response.card != null) {
       response.card!.nullifyNumber();
